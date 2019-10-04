@@ -1,6 +1,6 @@
 <?php
 
-namespace mttzz\laravelTelegramLog;
+namespace mttzzz\laravelTelegramLog;
 
 use GuzzleHttp\Client;
 
