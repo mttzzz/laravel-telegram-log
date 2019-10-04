@@ -2,6 +2,7 @@
     "name": "mttzzz/laravel-telegram-log",
     "type": "library",
     "license": "MIT",
+    "version": "1.0.0",
     "require": {
         "guzzlehttp/guzzle": "~6.3"
     },
