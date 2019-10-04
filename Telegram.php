@@ -17,8 +17,8 @@ class Telegram
             }
         }
 
-        $token = config('token_telegram');
-        $chat_id = config('chat_id_telegram');
+        $token = config('app.token_telegram');
+        $chat_id = config('app.chat_id_telegram');
 
         $message = '<b>' . env('APP_NAME') . '</b>' . PHP_EOL
             . '<b>' . env('APP_ENV') . '</b>' . PHP_EOL
