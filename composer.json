@@ -1,0 +1,11 @@
+{
+    "name": "mttzzz/laravel-telegram-log",
+    "description": "Send log to telegram chat",
+    "authors": [
+        {
+            "name": "Pushka",
+            "email": "info@pushka.biz"
+        }
+    ],
+    "require": {}
+}
