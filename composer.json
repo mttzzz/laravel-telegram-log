@@ -12,5 +12,10 @@
             "email": "info@pushka.biz"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "mttzz\\laravelTelegramLog\\":""
+        }
+    },
     "minimum-stability": "dev"
 }
