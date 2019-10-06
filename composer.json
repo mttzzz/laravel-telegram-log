@@ -15,5 +15,12 @@
             "mttzzz\\laravelTelegramLog\\":""
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "mttzzz\\laravelTelegramLog\\ServiceProvider"
+            ]
+        }
+    }
 }
