@@ -19,7 +19,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "mttzzz\\laravelTelegramLog\\ServiceProvider"
+                "mttzzz\\laravelTelegramLog\\TelegramLogServiceProvider"
             ]
         }
     }
