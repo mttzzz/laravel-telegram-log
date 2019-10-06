@@ -4,7 +4,9 @@
 namespace mttzzz\laravelTelegramLog;
 
 
-class TelegramLogServiceProvider
+use Illuminate\Support\ServiceProvider;
+
+class TelegramLogServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -15,6 +17,6 @@ class TelegramLogServiceProvider
     {
         $this->publishes([
             __DIR__.'/config.php' => config_path('telegramLog.php'),
-        ]);
+        ], 'config');
     }
 }
