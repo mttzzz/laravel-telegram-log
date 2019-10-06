@@ -9,7 +9,7 @@
 ### Publish config
     php artisan vendor:publish --provider mttzzz\laravelTelegramLog\TelegramLogServiceProvider
     
-Edit app/config/telegramLog.php and fill your Telegram Bot token and chatId
+Edit app/config/telegramLog.php and fill your Telegram Bot token and chatId or add env variables.
 ```php
 <?php
 
