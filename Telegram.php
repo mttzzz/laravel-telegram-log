@@ -8,7 +8,14 @@ class Telegram
 {
     public static function log($note)
     {
-        if (is_array($note) || is_object($note)) {
+        if ($note instanceof \Exception) {
+            $note = [
+                'message' => $note->getMessage(),
+                'line' => $note->getLine(),
+                'file' => $note->getFile()
+            ];
+            $note = json_encode($note, 64 | 128 | 256);
+        } elseif (is_array($note) || is_object($note)) {
             $note = json_encode($note, 64 | 128 | 256);
         } else {
             $noteArray = json_decode($note);
