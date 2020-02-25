@@ -18,7 +18,7 @@ class Telegram
         } elseif (is_array($note) || is_object($note)) {
             if (isset($note['linkLog'])) {
                 $keyboard = array("inline_keyboard" => [[[ "text" => 'Перейти', "url" => $note['linkLog']]]]);
-                $message = str_replace(['\n','   '], '', $note['message']);
+                $message = str_replace(['\n','   ', "\n"], '', $note['message']);
                 $note = compact('message');
             }
             $note = json_encode($note, 64 | 128 | 256);
