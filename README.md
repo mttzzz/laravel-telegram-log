@@ -29,15 +29,15 @@ Edit app/config/logging.php and add channel "telegram" and change channel "stack
 
 ```php
 return [
-'stack' => [
-     'driver' => 'stack',
-     'channels' => ['daily', 'telegram'],
-     'ignore_exceptions' => false,
-],
-'telegram' => [
-     'driver' => 'monolog',
-     'handler' => \mttzzz\laravelTelegramLog\HandlerTelegramLogger::class
-]
+    'stack' => [
+         'driver' => 'stack',
+         'channels' => ['daily', 'telegram'],
+         'ignore_exceptions' => false,
+    ],
+    'telegram' => [
+         'driver' => 'monolog',
+         'handler' => \mttzzz\laravelTelegramLog\HandlerTelegramLogger::class
+    ]
 ];
 ```
 
