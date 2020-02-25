@@ -20,7 +20,7 @@ return [
     'chat_id' => env('TELEGRAM_LOG_CHAT_ID', '-1111111111111'),
       
     //URL logs for value - linkLog
-    'url' => '/logs'  
+    'url' => 'logs'  
 ];
 
 ```
