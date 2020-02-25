@@ -13,7 +13,7 @@ class HandlerTelegramLogger extends Handler
 
     public function handle(array $record): bool
     {
-        $record['link_error'] = env('APP_URL').'/'.config('telegramLog.url','/logs');
+        $record['linkLog'] = env('APP_URL').'/'.config('telegramLog.url','/logs');
         Telegram::log($record);
         return true;
     }
