@@ -11,7 +11,6 @@
     
 Edit app/config/telegramLog.php and fill your Telegram Bot token and chatId or add env variables.
 ```php
-<?php
 
 return [
      // Telegram Bot Token
@@ -23,6 +22,23 @@ return [
     //URL logs for value - linkLog
     'url' => '/logs'  
 ];
+
+```
+
+Edit app/config/logging.php and add channel "telegram" and change channel "stack" value 'channels' by then (example). 
+
+```php
+return [
+'stack' => [
+     'driver' => 'stack',
+     'channels' => ['daily', 'telegram'],
+     'ignore_exceptions' => false,
+],
+'telegram' => [
+     'driver' => 'monolog',
+     'handler' => \mttzzz\laravelTelegramLog\HandlerTelegramLogger::class
+]
+];
 ```
 
 ### Usage
@@ -32,17 +48,3 @@ Telegram::log(['test' => 'test']);
 Telegram::log({"test" : "test"});
 ```
 
-### Usage
-Edit app/config/logging.php and add channel "telegram" and change channel "stack" value 'channels' by then (example). 
-
-```php
-'stack' => [
-     'driver' => 'stack',
-     'channels' => ['daily', 'telegram'],
-     'ignore_exceptions' => false,
-],
-'telegram' => [
-     'driver' => 'monolog',
-     'handler' => \mttzzz\laravelTelegramLog\HandlerTelegramLogger::class
-],
-```
