@@ -35,15 +35,18 @@ class Telegram
         try {
             $ids = explode(',', $chat_id);
             $client = new Client();
+            if (config('sentry.dsn')) {
+                $sentryId = mb_split('/', config('sentry.dsn'))[3];
+                $url = 'https://sentry.io/organizations/pushka/issues/?project='.$sentryId;
+                $keyboard = ["inline_keyboard" => [[[
+                    "text" => 'Перейти в sentry',
+                    "url" => $url
+                ]]]];
+            }
 
             foreach ($ids as $id) {
                 $query = ['text' => $message, 'chat_id' => $id, 'parse_mode' => 'html'];
-                if (config('sentry.dsn')) {
-                    $sentryId = mb_split('/', config('sentry.dsn'))[3];
-                    $keyboard = ["inline_keyboard" => [[[
-                        "text" => 'Перейти в sentry',
-                        "url" => 'https://sentry.io/organizations/pushka/issues/?project=' + $sentryId
-                    ]]]];
+                if (isset($keyboard)) {
                     $query['reply_markup'] = json_encode($keyboard);
                 }
                 $client->get('https://api.telegram.org/bot' . $token . '/sendMessage', ['query' => $query]);
