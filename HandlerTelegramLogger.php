@@ -14,8 +14,7 @@ class HandlerTelegramLogger extends Handler
     public function handle(array $record): bool
     {
         Telegram::log([
-            'message' => $record['message'],
-            'linkLog' => env('APP_URL').'/'.config('telegramLog.url','logs')
+            'message' => $record['message']
         ]);
         return true;
     }
