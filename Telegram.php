@@ -25,7 +25,6 @@ class Telegram
                 $note = json_encode($noteArray, 64 | 128 | 256);
             }
         }
-
         $token = config('telegramLog.token');
         $chat_id = config('telegramLog.chat_id');
         $message = '<b>' . env('APP_NAME') . '</b>' . PHP_EOL
