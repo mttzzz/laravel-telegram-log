@@ -39,10 +39,10 @@ class Telegram
             foreach ($ids as $id) {
                 $query = ['text' => $message, 'chat_id' => $id, 'parse_mode' => 'html'];
                 if (config('sentry.dsn')) {
-                    $id = mb_split('/', config('sentry.dsn'))[3];
+                    $sentryId = mb_split('/', config('sentry.dsn'))[3];
                     $keyboard = ["inline_keyboard" => [[[
                         "text" => 'Перейти в sentry',
-                        "url" => 'https://sentry.io/organizations/pushka/issues/?project=' + $id
+                        "url" => 'https://sentry.io/organizations/pushka/issues/?project=' + $sentryId
                     ]]]];
                     $query['reply_markup'] = json_encode($keyboard);
                 }
