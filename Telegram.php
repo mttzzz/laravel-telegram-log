@@ -15,9 +15,19 @@ class Telegram
                 'file' => $note->getFile()
             ];
             $note = json_encode($note, 64 | 128 | 256);
+            if (config('sentry.dsn')) {
+                $sentryId = mb_split('/', config('sentry.dsn'))[3];
+                $url = 'https://sentry.io/organizations/pushka/issues/?project='.$sentryId;
+                $keyboard = ["inline_keyboard" => [[[
+                    "text" => 'Перейти в sentry',
+                    "url" => $url
+                ]]]];
+            }
         } elseif (is_array($note) || is_object($note)) {
-            $message = str_replace(['\n', '   ', "\n"], '', $note['message']);
-            $note = compact('message');
+            if (isset($note['message'])) {
+                $message = str_replace(['\n', '   ', "\n"], '', $note['message']);
+                $note = compact('message');
+            }
             $note = json_encode($note, 64 | 128 | 256);
         } else {
             $noteArray = json_decode($note);
@@ -35,14 +45,7 @@ class Telegram
         try {
             $ids = explode(',', $chat_id);
             $client = new Client();
-            if (config('sentry.dsn')) {
-                $sentryId = mb_split('/', config('sentry.dsn'))[3];
-                $url = 'https://sentry.io/organizations/pushka/issues/?project='.$sentryId;
-                $keyboard = ["inline_keyboard" => [[[
-                    "text" => 'Перейти в sentry',
-                    "url" => $url
-                ]]]];
-            }
+
 
             foreach ($ids as $id) {
                 $query = ['text' => $message, 'chat_id' => $id, 'parse_mode' => 'html'];
