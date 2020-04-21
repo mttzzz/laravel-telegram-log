@@ -2,22 +2,36 @@
 
 namespace mttzzz\laravelTelegramLog;
 
+use Exception;
 use GuzzleHttp\Client;
 
 class Telegram
 {
     public static function log($note)
     {
-        if ($note instanceof \Exception) {
-            $note = [
-                'message' => $note->getMessage(),
-                'line' => $note->getLine(),
-                'file' => $note->getFile()
-            ];
+        if ($note instanceof Exception) {
+            if (get_class($note) === 'GuzzleHttp\Exception\ClientException') {
+
+                $note = [
+                    'code' => $note->getResponse()->getStatusCode(),
+                    'reasonPhrase' => $note->getResponse()->getReasonPhrase(),
+                    'message' => json_decode($note->getResponse()->getBody()->getContents(), 1)['message'],
+                    'host' => $note->getRequest()->getUri()->getHost(),
+                    'path' => $note->getRequest()->getUri()->getPath(),
+                    'query' => $note->getRequest()->getUri()->getQuery()
+                ];
+            } else {
+
+                $note = [
+                    'message' => $note->getMessage(),
+                    'line' => $note->getLine(),
+                    'file' => $note->getFile()
+                ];
+            }
             $note = json_encode($note, 64 | 128 | 256);
             if (config('sentry.dsn')) {
                 $sentryId = mb_split('/', config('sentry.dsn'))[3];
-                $url = 'https://sentry.io/organizations/pushka/issues/?project='.$sentryId;
+                $url = 'https://sentry.io/organizations/pushka/issues/?project=' . $sentryId;
                 $keyboard = ["inline_keyboard" => [[[
                     "text" => 'Перейти в sentry',
                     "url" => $url
@@ -54,8 +68,8 @@ class Telegram
                 }
                 $client->get('https://api.telegram.org/bot' . $token . '/sendMessage', ['query' => $query]);
             }
-        } catch (\Exception $e) {
-            Telegram::log($e);
+        } catch (Exception $e) {
+            Telegram::log($e->getMessage());
         }
     }
 }
