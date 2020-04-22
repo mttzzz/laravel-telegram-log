@@ -15,7 +15,7 @@ class Telegram
                 $note = [
                     'code' => $note->getResponse()->getStatusCode(),
                     'reasonPhrase' => $note->getResponse()->getReasonPhrase(),
-                    'message' => $response['message'] ?? '',
+                    'message' => $response && $response['message'] ? $response['message'] : '',
                     'host' => $note->getRequest()->getUri()->getHost(),
                     'path' => $note->getRequest()->getUri()->getPath(),
                     'query' => $note->getRequest()->getUri()->getQuery()
@@ -69,6 +69,7 @@ class Telegram
             }
         } catch (Exception $e) {
             Telegram::log($e->getMessage());
+            Telegram::log($e->getResponse()->getBody()->getContents());
         }
     }
 }
