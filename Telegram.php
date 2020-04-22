@@ -15,7 +15,7 @@ class Telegram
                 $note = [
                     'code' => $note->getResponse()->getStatusCode(),
                     'reasonPhrase' => $note->getResponse()->getReasonPhrase(),
-                    'message' => $response && $response['message'] ? $response['message'] : '',
+                    'message' => $response && isset($response['message']) ? $response['message'] : '',
                     'host' => $note->getRequest()->getUri()->getHost(),
                     'path' => $note->getRequest()->getUri()->getPath(),
                     'query' => $note->getRequest()->getUri()->getQuery()
