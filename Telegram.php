@@ -11,17 +11,16 @@ class Telegram
     {
         if ($note instanceof Exception) {
             if (get_class($note) === 'GuzzleHttp\Exception\ClientException') {
-
+                $response = json_decode($note->getResponse()->getBody()->getContents(), 1);
                 $note = [
                     'code' => $note->getResponse()->getStatusCode(),
                     'reasonPhrase' => $note->getResponse()->getReasonPhrase(),
-                    'message' => json_decode($note->getResponse()->getBody()->getContents(), 1)['message'],
+                    'message' => $response['message'] ?? '',
                     'host' => $note->getRequest()->getUri()->getHost(),
                     'path' => $note->getRequest()->getUri()->getPath(),
                     'query' => $note->getRequest()->getUri()->getQuery()
                 ];
             } else {
-
                 $note = [
                     'message' => $note->getMessage(),
                     'line' => $note->getLine(),
