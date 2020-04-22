@@ -17,7 +17,7 @@ class Telegram
                 'line' => $note->getLine(),
                 'file' => $note->getFile()
             ];
-            $note = json_encode($note, 64 | 128 | 256);
+            $note = json_encode($note, 64 | 128 | 256 | 2048);
             if (config('sentry.dsn')) {
                 $sentryId = mb_split('/', config('sentry.dsn'))[3];
                 $url = 'https://sentry.io/organizations/pushka/issues/?project=' . $sentryId;
@@ -31,11 +31,12 @@ class Telegram
                 $message = str_replace(['\n', '   ', "\n"], '', $note['message']);
                 $note = compact('message');
             }
-            $note = json_encode($note, 64 | 128 | 256);
+            $note = json_encode($note, 64 | 128 | 256 | 2048);
         } else {
-            $noteArray = json_decode($note);
+
+            $noteArray = json_decode(urldecode($note),1);
             if (json_last_error() == JSON_ERROR_NONE) {
-                $note = json_encode($noteArray, 64 | 128 | 256);
+                $note = json_encode($noteArray, 64 | 128 | 256 | 2048 );
             }
         }
         $token = config('telegramLog.token');
