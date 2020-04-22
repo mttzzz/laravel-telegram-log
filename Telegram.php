@@ -4,29 +4,19 @@ namespace mttzzz\laravelTelegramLog;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 
 class Telegram
 {
     public static function log($note)
     {
         if ($note instanceof Exception) {
-            if (get_class($note) === 'GuzzleHttp\Exception\ClientException') {
-                $response = json_decode($note->getResponse()->getBody()->getContents(), 1);
-                $note = [
-                    'code' => $note->getResponse()->getStatusCode(),
-                    'reasonPhrase' => $note->getResponse()->getReasonPhrase(),
-                    'message' => $response && isset($response['message']) ? $response['message'] : '',
-                    'host' => $note->getRequest()->getUri()->getHost(),
-                    'path' => $note->getRequest()->getUri()->getPath(),
-                    'query' => $note->getRequest()->getUri()->getQuery()
-                ];
-            } else {
-                $note = [
-                    'message' => $note->getMessage(),
-                    'line' => $note->getLine(),
-                    'file' => $note->getFile()
-                ];
-            }
+            $note = [
+                'message' => $note->getMessage(),
+                'line' => $note->getLine(),
+                'file' => $note->getFile()
+            ];
             $note = json_encode($note, 64 | 128 | 256);
             if (config('sentry.dsn')) {
                 $sentryId = mb_split('/', config('sentry.dsn'))[3];
@@ -67,9 +57,16 @@ class Telegram
                 }
                 $client->get('https://api.telegram.org/bot' . $token . '/sendMessage', ['query' => $query]);
             }
-        } catch (Exception $e) {
-            Telegram::log($e->getMessage());
+        } catch (ClientException $e) {
+            Telegram::log('Telegram Log DIE!!! ClientException');
             Telegram::log($e->getResponse()->getBody()->getContents());
+        } catch (ServerException $e) {
+            Telegram::log('Telegram Log DIE!!!ServerException');
+            Telegram::log($e->getRequest()->getBody()->getContents());
+        } catch (Exception $e) {
+            Telegram::log('Telegram Log DIE!!! Exception');
+            Telegram::log($e->getMessage());
+
         }
     }
 }
