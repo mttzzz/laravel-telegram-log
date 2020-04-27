@@ -13,7 +13,7 @@ class Telegram
     {
         if ($note instanceof Exception) {
             $note = [
-                'message' => $note->getMessage(),
+                'message' => self::stLimit($note->getMessage()),
                 'line' => $note->getLine(),
                 'file' => $note->getFile()
             ];
@@ -34,9 +34,9 @@ class Telegram
             $note = json_encode($note, 64 | 128 | 256 | 2048);
         } else {
 
-            $noteArray = json_decode(urldecode($note),1);
+            $noteArray = json_decode(urldecode($note), 1);
             if (json_last_error() == JSON_ERROR_NONE) {
-                $note = json_encode($noteArray, 64 | 128 | 256 | 2048 );
+                $note = json_encode($noteArray, 64 | 128 | 256 | 2048);
             }
         }
         $token = config('telegramLog.token');
@@ -44,7 +44,7 @@ class Telegram
         $message = '<b>' . env('APP_NAME') . '</b>' . PHP_EOL
             . '<b>' . env('APP_ENV') . '</b>' . PHP_EOL
             . '<i>Message:</i>' . PHP_EOL
-            . '<code>' . $note . '</code>';
+            . '<code>' . self::stLimit($note) . '</code>';
 
         try {
             $ids = explode(',', $chat_id);
@@ -63,5 +63,10 @@ class Telegram
             Telegram::log($e->getMessage());
 
         }
+    }
+
+    public static function stLimit($m)
+    {
+        return mb_strlen($m) > 1300 ? mb_substr($m, 0, 1300) . '...' : $m;
     }
 }

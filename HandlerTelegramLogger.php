@@ -13,9 +13,7 @@ class HandlerTelegramLogger extends Handler
 
     public function handle(array $record): bool
     {
-        Telegram::log([
-            'message' => $record['message']
-        ]);
+        Telegram::log(['message' => $record['message']]);
         return true;
     }
 }
