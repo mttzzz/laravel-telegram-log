@@ -60,7 +60,7 @@ class Telegram
             }
         } catch (Exception $e) {
             Telegram::log('Telegram Log DIE!!! Exception');
-            Telegram::log($e->getMessage());
+            Telegram::log(self::stLimit($e->getMessage()));
 
         }
     }
