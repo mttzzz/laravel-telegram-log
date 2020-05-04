@@ -59,8 +59,7 @@ class Telegram
                 $client->get('https://api.telegram.org/bot' . $token . '/sendMessage', ['query' => $query]);
             }
         } catch (Exception $e) {
-            Telegram::log('Telegram Log DIE!!! Exception');
-            Telegram::log(self::stLimit($e->getMessage()));
+            Telegram::log('Telegram Log DIE: '. self::stLimit($e->getMessage()));
 
         }
     }
