@@ -52,7 +52,7 @@ class Telegram
 
 
             foreach ($ids as $id) {
-                $query = ['text' => $message, 'chat_id' => $id, 'parse_mode' => 'html'];
+                $query = ['text' => self::stLimit($message), 'chat_id' => $id, 'parse_mode' => 'html'];
                 if (isset($keyboard)) {
                     $query['reply_markup'] = json_encode($keyboard);
                 }
