@@ -4,6 +4,7 @@ namespace mttzzz\LaravelTelegramLog;
 
 use Exception;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -18,10 +19,10 @@ class Telegram
             case $message instanceof RequestException :
                 $message = json_decode($message->response->body(), 1);
                 break;
+            case $message instanceof Collection:
+                $message = $message->toArray();
+                break;
             case is_array($message) :
-                foreach ($message as $key => $item) {
-                    $message[$key] = (array)$item;
-                }
                 break;
             case is_object($message) :
                 $message = (array)$message;
