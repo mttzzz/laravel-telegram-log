@@ -1,6 +1,6 @@
 <?php
 
-namespace mttzzz\laravelTelegramLog;
+namespace mttzzz\LaravelTelegramLog;
 
 use Exception;
 use Illuminate\Http\Client\RequestException;
