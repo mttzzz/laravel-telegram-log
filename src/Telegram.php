@@ -26,6 +26,9 @@ class Telegram
             case is_object($message) :
                 $message = (array)$message;
                 break;
+            case is_numeric($message) :
+                $message = ['message' => $message];
+                break;
             case self::isJson($message) :
                 $message = json_decode($message, 1);
                 break;
