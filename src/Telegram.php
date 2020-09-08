@@ -1,7 +1,8 @@
 <?php
 
-namespace mttzzz\LaravelTelegramLog;
+namespace mttzzz\laravelTelegramLog;
 
+use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -11,7 +12,7 @@ class Telegram
     public static function log($message)
     {
         switch ($message) {
-            case $message instanceof \Exception :
+            case $message instanceof Exception :
                 $message = ['message' => $message->getMessage()];
                 break;
             case $message instanceof RequestException :
@@ -33,7 +34,7 @@ class Telegram
         }
         try {
             self::send($message);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             sleep(1);
             Telegram::log('упал');
         }
