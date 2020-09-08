@@ -22,10 +22,10 @@ class Telegram
             case $message instanceof Collection:
                 $message = $message->toArray();
                 break;
-            case is_array($message) :
-                break;
             case is_object($message) :
                 $message = (array)$message;
+                break;
+            case is_array($message) :
                 break;
             case is_numeric($message) :
                 $message = ['message' => $message];
