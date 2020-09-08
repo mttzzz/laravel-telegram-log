@@ -61,7 +61,7 @@ class Telegram
         }
 
         $query = [
-            'chat_id' => config('laraveltelegramlog.chat_id'),
+            'chat_id' => config('telegramLog.chat_id'),
             'text' => $text,
             'parse_mode' => 'html',
         ];
@@ -75,10 +75,10 @@ class Telegram
         }
 
         if (mb_strlen($text) < 4096) {
-            Http::get('https://api.telegram.org/bot' . config('laraveltelegramlog.token') . '/sendMessage', $query)->throw();
+            Http::get('https://api.telegram.org/bot' . config('telegramLog.token') . '/sendMessage', $query)->throw();
         } else {
             Http::asMultipart()->attach('document', $text, env('APP_NAME') . '.txt')
-                ->post('https://api.telegram.org/bot' . config('laraveltelegramlog.token') . '/sendDocument', $query)->throw();
+                ->post('https://api.telegram.org/bot' . config('telegramLog.token') . '/sendDocument', $query)->throw();
         }
     }
 }

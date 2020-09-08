@@ -31,11 +31,11 @@ class LaravelTelegramLogServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/laraveltelegramlog.php', 'laraveltelegramlog');
+        $this->mergeConfigFrom(__DIR__ . '/../config/telegramLog.php', 'telegramLog');
 
         // Register the service the package provides.
         $this->app->singleton('laraveltelegramlog', function ($app) {
-            return new LaravelTelegramLog;
+            return new Telegram;
         });
     }
 
@@ -48,7 +48,7 @@ class LaravelTelegramLogServiceProvider extends ServiceProvider
     {
         return ['laraveltelegramlog'];
     }
-    
+
     /**
      * Console-specific booting.
      *
@@ -58,8 +58,8 @@ class LaravelTelegramLogServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__.'/../config/laraveltelegramlog.php' => config_path('laraveltelegramlog.php'),
-        ], 'laraveltelegramlog.config');
+            __DIR__ . '/../config/telegramLog.php' => config_path('telegramLog.php'),
+        ], 'telegramLog.config');
 
         // Publishing the views.
         /*$this->publishes([
