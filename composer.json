@@ -1,16 +1,19 @@
 {
     "name": "mttzzz/laraveltelegramlog",
     "description": "",
-    "license": "license",
+    "license": "MIT",
     "authors": [
         {
             "name": "mttzzz",
             "email": "info@puska.biz",
-            "homepage": "mttzzz"
+            "homepage": "https://puska.biz"
         }
     ],
     "homepage": "https://github.com/mttzzz/laraveltelegramlog",
-    "keywords": ["Laravel", "LaravelTelegramLog"],
+    "keywords": [
+        "Laravel",
+        "LaravelTelegramLog"
+    ],
     "require": {
         "illuminate/support": "~5|~6|~7"
     },
