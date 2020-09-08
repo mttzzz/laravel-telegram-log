@@ -1,0 +1,43 @@
+{
+    "name": "mttzzz/laraveltelegramlog",
+    "description": "",
+    "license": "license",
+    "authors": [
+        {
+            "name": "mttzzz",
+            "email": "info@puska.biz",
+            "homepage": "mttzzz"
+        }
+    ],
+    "homepage": "https://github.com/mttzzz/laraveltelegramlog",
+    "keywords": ["Laravel", "LaravelTelegramLog"],
+    "require": {
+        "illuminate/support": "~5|~6|~7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3|~4",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "mttzzz\\LaravelTelegramLog\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "mttzzz\\LaravelTelegramLog\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "mttzzz\\LaravelTelegramLog\\LaravelTelegramLogServiceProvider"
+            ],
+            "aliases": {
+                "LaravelTelegramLog": "mttzzz\\LaravelTelegramLog\\Facades\\LaravelTelegramLog"
+            }
+        }
+    }
+}
