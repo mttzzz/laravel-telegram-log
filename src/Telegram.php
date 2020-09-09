@@ -39,8 +39,11 @@ class Telegram
         try {
             self::send($message);
         } catch (Exception $e) {
-            sleep(1);
-            Telegram::log('упал');
+            Telegram::log($e);
+            Http::asMultipart()->attach('document', $message, env('APP_NAME') . '.txt')
+                ->post('https://api.telegram.org/bot' . config('telegramLog.token') . '/sendDocument', [
+                    'chat_id' => config('telegramLog.chat_id'),
+                ])->throw();
         }
     }
 
