@@ -15,7 +15,7 @@
         "LaravelTelegramLog"
     ],
     "require": {
-        "illuminate/support": "~5|~6|~7"
+        "illuminate/support": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0",
