@@ -37,9 +37,10 @@ class Telegram
                 $message = ['message' => $message];
         }
         try {
-            self::send($message);
+            if (is_array((array)$message) && self::isJson(json_encode((array)$message))) {
+                self::send((array)$message);
+            }
         } catch (Exception $e) {
-            Telegram::log($e);
             Http::asMultipart()->attach('document', $message, env('APP_NAME') . '.txt')
                 ->post('https://api.telegram.org/bot' . config('telegramLog.token') . '/sendDocument', [
                     'chat_id' => config('telegramLog.chat_id'),
@@ -49,8 +50,12 @@ class Telegram
 
     private static function isJson($string)
     {
-        json_decode($string);
-        return json_last_error() == JSON_ERROR_NONE;
+        try {
+            json_decode($string);
+            return json_last_error() == JSON_ERROR_NONE;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     private static function send(array $message)
