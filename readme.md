@@ -16,6 +16,10 @@ composer require mttzzz/laravel-telegram-log
 ```
 
 ``` bash
+cr mttzzz/laravel-telegram-log
+```
+
+``` bash
 php artisan vendor:publish --provider="mttzzz\LaravelTelegramLog\LaravelTelegramLogServiceProvider"
 ```
 
