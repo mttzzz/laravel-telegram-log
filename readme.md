@@ -13,6 +13,7 @@ Via Composer
 
 ``` bash
 $ composer require mttzzz/laravel-telegram-log
+php artisan vendor:publish --provider="mttzzz\LaravelTelegramLog\LaravelTelegramLogServiceProvider"
 ```
 
 ## Usage
