@@ -75,10 +75,9 @@ class Telegram
             'parse_mode' => 'html',
         ];
         if (config('sentry.dsn')) {
-            $url = 'https://sentry.io/organizations/pushka/issues/?project=' . Str::afterLast(config('sentry.dsn'), '/');
             $keyboard = ["inline_keyboard" => [[[
                 "text" => 'Перейти в sentry',
-                "url" => $url
+                "url" => config('sentry.urlTelegram')
             ]]]];
             $query['reply_markup'] = json_encode($keyboard);
         }
