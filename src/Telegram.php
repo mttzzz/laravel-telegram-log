@@ -77,7 +77,7 @@ class Telegram
         if (config('sentry.dsn')) {
             $keyboard = ["inline_keyboard" => [[[
                 "text" => 'Перейти в sentry',
-                "url" => config('sentry.urlTelegram')
+                "url" => config('app.sentryUrl')
             ]]]];
             $query['reply_markup'] = json_encode($keyboard);
         }
