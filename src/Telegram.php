@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use function Sentry\captureException;
+use TypeError;
 
 class Telegram
 {
@@ -28,7 +29,15 @@ class Telegram
 
         try {
             self::send($message);
-        } catch (Exception $e) {
+        } catch (TypeError $e) {
+            self::send([
+                'message' => 'Telegram->log error',
+                'error' => $e->getMessage(),
+                'typeMessage' => gettype($message),
+                'printR' => print_r($message)
+            ]);
+        }
+        catch (Exception $e) {
             captureException($e);
             self::send([
                 'message' => 'Telegram->log error',
