@@ -13,41 +13,60 @@ use TypeError;
 
 class Telegram
 {
-    public static function log($message)
+    public static function log($message) : void
     {
-        $message = match ($message) {
-            $message instanceof Exception => $message->getMessage(),
-            $message instanceof RequestException => self::handleRequestException($message),
-            $message instanceof Collection => $message->toArray(),
-            default => $message
-        };
-
         $parsedMessage = match (gettype($message)) {
-            "array", "object"=> (array)$message,
-            default => ['message' => (string)$message]
+            "array", => $message,
+            "object"=> self::handleObject($message),
+            default => ['message' => print_r($message, true)
+            ]
         };
-
         try {
-            if (gettype($message) !== 'array') {
-                $message = ['message' => print_r($message, true)];
-            }
-            self::send($message);
-        } 
+            self::send($parsedMessage);
+        }
         catch (Exception $e) {
             captureException($e);
         }
     }
 
-    public static function handleRequestException(RequestException $exception)
+    public static function handleObject(object $message) : array
     {
-        $data = $exception->response->json();
-        empty($data) ? $exception->response->body() : $data;
-
+        return match (get_class($message)) {
+            RequestException::class  => self::handleRequestException($message),
+            Collection::class  => $message->toArray(),
+            Exception::class  => ['message' => $message->getMessage()],
+            default => print_r($message, true)
+        };
     }
 
+    public static function handleRequestException(RequestException $exception) : array
+    {
+        $data = $exception->response->json();
+        if (empty($data)) {
+            xml_parse_into_struct(xml_parser_create(), $exception->response->body(), $data, $index);
+        }
+
+        return empty($data) ?  ['message' => (string)$exception->response->body()] :$data;
+    }
+
+    public static function XML2Array(SimpleXMLElement $parent)
+    {
+        $array = array();
+
+        foreach ($parent as $name => $element) {
+            ($node = & $array[$name])
+            && (1 === count($node) ? $node = array($node) : 1)
+            && $node = & $node[];
+
+            $node = $element->count() ? XML2Array($element) : trim($element);
+        }
+
+        return $array;
+    }
 
     private static function send(array $message) : void
     {
+        //$message = ['message' => 1111];
         $text = '<b>' . env('APP_NAME') . '</b>' . PHP_EOL
             . '<b>' . env('APP_ENV') . '</b>' . PHP_EOL
             . '<i>Message:</i>' . PHP_EOL
