@@ -45,28 +45,11 @@ class Telegram
         if (empty($data)) {
             xml_parse_into_struct(xml_parser_create(), $exception->response->body(), $data, $index);
         }
-
         return empty($data) ?  ['message' => (string)$exception->response->body()] :$data;
-    }
-
-    public static function XML2Array(SimpleXMLElement $parent)
-    {
-        $array = array();
-
-        foreach ($parent as $name => $element) {
-            ($node = & $array[$name])
-            && (1 === count($node) ? $node = array($node) : 1)
-            && $node = & $node[];
-
-            $node = $element->count() ? XML2Array($element) : trim($element);
-        }
-
-        return $array;
     }
 
     private static function send(array $message) : void
     {
-        //$message = ['message' => 1111];
         $text = '<b>' . env('APP_NAME') . '</b>' . PHP_EOL
             . '<b>' . env('APP_ENV') . '</b>' . PHP_EOL
             . '<i>Message:</i>' . PHP_EOL
