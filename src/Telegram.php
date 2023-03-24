@@ -29,7 +29,7 @@ class Telegram
 
         try {
             if (gettype($message) !== 'array') {
-                $message = ['message' => print_r($message)];
+                $message = ['message' => print_r($message, true)];
             }
             self::send($message);
         } 
