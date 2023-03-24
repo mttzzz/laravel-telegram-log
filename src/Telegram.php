@@ -28,23 +28,13 @@ class Telegram
         };
 
         try {
+            if (gettype($message) !== 'array') {
+                $message = ['message' => print_r($message)];
+            }
             self::send($message);
-        } catch (TypeError $e) {
-            self::send([
-                'message' => 'Telegram->log error',
-                'error' => $e->getMessage(),
-                'typeMessage' => gettype($message),
-                'printR' => print_r($message)
-            ]);
-        }
+        } 
         catch (Exception $e) {
             captureException($e);
-            self::send([
-                'message' => 'Telegram->log error',
-                'error' => $e->getMessage(),
-                'typeMessage' => gettype($message),
-                'printR' => print_r($message)
-            ]);
         }
     }
 
