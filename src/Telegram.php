@@ -6,68 +6,53 @@ use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use function Sentry\captureException;
 
 class Telegram
 {
     public static function log($message)
     {
-        switch ($message) {
-            case $message instanceof Exception :
-                $message = ['message' => $message->getMessage()];
-                break;
-            case $message instanceof RequestException :
-                $message = json_decode($message->response->body(), 1);
-                break;
-            case $message instanceof Collection:
-                $message = $message->toArray();
-                break;
-            case is_object($message) :
-                $message = (array)$message;
-                break;
-            case is_array($message) :
-                break;
-            case is_numeric($message) :
-                $message = ['message' => $message];
-                break;
-            case self::isJson($message) :
-                $message = json_decode($message, 1);
-                break;
-            default:
-                $message = ['message' => $message];
-        }
+        $message = match ($message) {
+            $message instanceof Exception => $message->getMessage(),
+            $message instanceof RequestException => self::handleRequestException($message),
+            $message instanceof Collection => $message->toArray(),
+            default => $message
+        };
+
+        $parsedMessage = match (gettype($message)) {
+            "array", "object"=> (array)$message,
+            default => ['message' => (string)$message]
+        };
+
         try {
-            if (is_array((array)$message) && self::isJson(json_encode((array)$message))) {
-                self::send((array)$message);
-            }
+            self::send($message);
         } catch (Exception $e) {
-            Http::asMultipart()->attach('document', $message, env('APP_NAME') . '.txt')
-                ->post('https://api.telegram.org/bot' . config('telegramLog.token') . '/sendDocument', [
-                    'chat_id' => config('telegramLog.chat_id'),
-                ])->throw();
+            captureException($e);
+            self::send([
+                'message' => 'Telegram->log error',
+                'error' => $e->getMessage(),
+                'typeMessage' => gettype($message),
+                'printR' => print_r($message)
+            ]);
         }
     }
 
-    private static function isJson($string)
+    public static function handleRequestException(RequestException $exception)
     {
-        try {
-            json_decode($string);
-            return json_last_error() == JSON_ERROR_NONE;
-        } catch (Exception $e) {
-            return false;
-        }
+        $data = $exception->response->json();
+        empty($data) ? $exception->response->body() : $data;
+
     }
 
-    private static function send(array $message)
+
+    private static function send(array $message) : void
     {
-        if (!is_array($message)) {
-            $text = 'НЕ МАССИВ!';
-        } else {
-            $text = '<b>' . env('APP_NAME') . '</b>' . PHP_EOL
-                . '<b>' . env('APP_ENV') . '</b>' . PHP_EOL
-                . '<i>Message:</i>' . PHP_EOL
-                . '<code>' . json_encode($message, 64 | 128 | 256) . '</code>';
-        }
+        $text = '<b>' . env('APP_NAME') . '</b>' . PHP_EOL
+            . '<b>' . env('APP_ENV') . '</b>' . PHP_EOL
+            . '<i>Message:</i>' . PHP_EOL
+            . '<code>' . json_encode($message, 64 | 128 | 256) . '</code>';
 
         $query = [
             'chat_id' => config('telegramLog.chat_id'),
