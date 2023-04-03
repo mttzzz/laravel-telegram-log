@@ -29,7 +29,7 @@ class Telegram
         }
     }
 
-    public static function handleObject(object $message) : array
+    public static function handleObject(object $message) : array | string
     {
         return match (get_class($message)) {
             RequestException::class  => self::handleRequestException($message),
