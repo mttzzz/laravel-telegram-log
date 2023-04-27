@@ -35,7 +35,7 @@ class Telegram
             RequestException::class  => self::handleRequestException($message),
             Collection::class  => $message->toArray(),
             Exception::class  => ['message' => $message->getMessage()],
-            default => print_r($message, true)
+            default => ['message' => print_r($message, true)]
         };
     }
 
