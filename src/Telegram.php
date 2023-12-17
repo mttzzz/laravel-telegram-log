@@ -50,15 +50,15 @@ class Telegram
 
     private static function send(array $message) : void
     {
-        $text = '<b>' . env('APP_NAME') . '</b>' . PHP_EOL
-            . '<b>' . env('APP_ENV') . '</b>' . PHP_EOL
-            . '<i>Message:</i>' . PHP_EOL
-            . '<code>' . json_encode($message, 64 | 128 | 256) . '</code>';
+        $text = '*' . env('APP_NAME') . '* ' . PHP_EOL
+            . '*' . env('APP_ENV') . '* ' . PHP_EOL
+            . '* Message: * ' . PHP_EOL
+            . '```' . json_encode($message, 64 | 128 | 256) . '```';
 
         $query = [
             'chat_id' => config('telegramLog.chat_id'),
             'text' => $text,
-            'parse_mode' => 'html',
+            'parse_mode' => 'Markdown',
         ];
         if (config('sentry.dsn')) {
             $keyboard = ["inline_keyboard" => [[[
