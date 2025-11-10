@@ -53,7 +53,7 @@ class Telegram
         $text = '*' . env('APP_NAME') . '* ' . PHP_EOL
             . '*' . env('APP_ENV') . '* ' . PHP_EOL
             . '* Message: * ' . PHP_EOL
-            . '```' . json_encode($message, 64 | 128 | 256) . '```';
+            . '```json' . json_encode($message, 64 | 128 | 256) . '```';
 
         $query = [
             'chat_id' => config('telegramLog.chat_id'),
