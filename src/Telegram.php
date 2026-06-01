@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use function Sentry\captureException;
 use TypeError;
 
 class Telegram
@@ -23,9 +22,11 @@ class Telegram
         };
         try {
             self::send($parsedMessage);
-        }
-        catch (Exception $e) {
-            captureException($e);
+        } catch (\Throwable $e) {
+            /* Telegram — side-channel уведомлений. Его сбой (429 / network /
+               connection reset) НЕ должен порождать Sentry-событие или
+               пробрасываться наружу — иначе error-storm множит шум
+               (consumer уже залогировал исходную ошибку в Sentry). Глотаем. */
         }
     }
 
@@ -68,11 +69,14 @@ class Telegram
             $query['reply_markup'] = json_encode($keyboard);
         }
 
+        /* Без ->throw(): 429 / ошибочный статус не должны бросать исключение —
+           уведомление просто не доставлено (fire-and-forget). Connection-ошибки
+           (cURL) всё равно бросаются HTTP-клиентом и ловятся в log(). */
         if (mb_strlen($text) < 4096) {
-            Http::get('https://api.telegram.org/bot' . config('telegramLog.token') . '/sendMessage', $query)->throw();
+            Http::get('https://api.telegram.org/bot' . config('telegramLog.token') . '/sendMessage', $query);
         } else {
             Http::asMultipart()->attach('document', $text, env('APP_NAME') . '.txt')
-                ->post('https://api.telegram.org/bot' . config('telegramLog.token') . '/sendDocument', $query)->throw();
+                ->post('https://api.telegram.org/bot' . config('telegramLog.token') . '/sendDocument', $query);
         }
     }
 }
